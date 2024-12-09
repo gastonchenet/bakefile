@@ -1,3 +1,5 @@
+package fr.tanchoulet.bakefile;
+
 public enum TokenType {
   IDENTIFIER,
   KEYWORD,
