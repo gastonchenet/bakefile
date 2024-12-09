@@ -14,7 +14,7 @@ ROOT := $(SRC_DIR)/$(PACKAGE_DIR)
 all : run                                                                                       # Exécution de la commande 'run' par défaut
 
 
-run : jar                                                                                       # Exécution du fichier JAR
+run :                                                                                       		# Exécution du fichier JAR
 	java -jar $(JAR)
 
 
