@@ -1,20 +1,30 @@
-package fr.tanchouler.bakefile;
+package fr.tanchoulet.bakefile;
 
 import java.io.FileNotFoundException;
 import java.util.List;
 
+/**
+ * Classe d'execution principale du programme
+ *
+ * @author Gaston Chenet
+ * @version 1.0
+ */
 public class Main {
+    /**
+     * Méthode d'execution du programme
+     * @param args Les arguments d'exécution
+     */
     public static void main(String[] args) {
-        String content;
+        Parser parser;
 
         try {
-            content = FileReader.read("bakefile");
+            parser = Parser.fromFile("bakefile");
         } catch (FileNotFoundException error) {
-            System.out.println("File not found");
+            // Retourne une erreur si le fichier 'bakefile' est inexistant
+            System.out.println("File not found, 'bakefile' might not exist");
             return;
         }
 
-        Parser parser = new Parser(content);
         List<Block> blocks = parser.parse();
 
         for (Block block : blocks) {
