@@ -139,8 +139,8 @@ public class Parser {
      *
      * @return La liste de blocs contenus dans le 'Bakefile'
      */
-    public List<Block> parse() {
-        List<Block> blocks = new ArrayList<>();
+    public Map<String, Block> parse() {
+        Map<String, Block> blocks = new HashMap<>();
         String varsReplacedContent = Parser.replaceVars(this.content);
         Matcher blockMatcher = Block.PATTERN.matcher(varsReplacedContent);
         List<String> phony = this.getPhony();
@@ -152,7 +152,7 @@ public class Parser {
             // de retirer les occurrences de '.PHONY' des blocs
             if (block.name.matches(Parser.PHONY_KEYWORD)) continue;
 
-            blocks.add(block);
+            blocks.put(block.name, block);
         }
 
         return blocks;

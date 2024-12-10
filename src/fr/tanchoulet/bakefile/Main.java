@@ -2,6 +2,7 @@ package fr.tanchoulet.bakefile;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Classe d'exécution principale du programme
@@ -25,10 +26,11 @@ public class Main {
             return;
         }
 
-        List<Block> blocks = parser.parse();
+        Map<String,Block> blocks = parser.parse();
 
-        for (Block block : blocks) {
-            System.out.println(block);
+        //parcour l'entry set
+        for (Map.Entry<String, Block> entry : blocks.entrySet()) {
+            System.out.println(entry);
         }
     }
 }
