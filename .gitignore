@@ -5,3 +5,4 @@ bakefile*
 build/
 doc/
 *.jar
+*.o
