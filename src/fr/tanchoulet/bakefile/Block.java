@@ -3,6 +3,7 @@ package fr.tanchoulet.bakefile;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -101,8 +102,16 @@ public class Block {
      * Exécution des références du bloc puis par la suite des commandes qu'il
      * contient
      */
-    public void execute() {
-        // TODO: Implement
+    public void execute(Map<String, Block> blocks) {
+        for (String reference : references) {
+            Block block = blocks.get(reference);
+            if (block == null) continue;
+            block.execute(blocks);
+        }
+        System.out.println("Executing block " + name + "commandes :");
+        for (String command : commands) {
+            System.out.println(command);
+        }
     }
 
     /**

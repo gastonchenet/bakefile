@@ -28,7 +28,10 @@ public class Main {
         Map<String,Block> blocks = parser.parse();
 
         CircularDependencyValidator validator = new CircularDependencyValidator(blocks);
-        if (args.length < 1) return;
+        if (args.length < 1) {
+            System.err.println("arg missing");
+            return;
+        }
 
         boolean hasCircularDependency = validator.hasCircularDependency(args[0]);
 
