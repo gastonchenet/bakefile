@@ -1,0 +1,6 @@
+.idea/
+bakefile*
+!bakefile/
+build/
+doc/
+*.jar
