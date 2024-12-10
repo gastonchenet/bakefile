@@ -18,6 +18,8 @@ Liste des tâches à réaliser pour finir la SAÉ.
 - [X] Création du 'Parser' de blocs
 - [X] Vérification des dépendances circulaires
 - [ ] Exécution des commandes
+- [ ] Vérifier les bytesCodes déja à jour
+- [ ] Faire un bon set de tests
 
 ## Makefile
 - [X] Makefile à jour
