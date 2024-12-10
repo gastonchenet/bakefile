@@ -50,3 +50,7 @@ Parser.class : Block.class                                                      
 
 Block.class :                                                                                   # Compilation de Block (Refs: x)
 	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(ROOT)/Block.java -implicit:none
+
+
+CircularDependencyValidator.class : Block.class
+	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(ROOT)/CircularDependencyValidator.java -implicit:none

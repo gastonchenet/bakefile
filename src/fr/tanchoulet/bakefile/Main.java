@@ -1,7 +1,6 @@
 package fr.tanchoulet.bakefile;
 
 import java.io.FileNotFoundException;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +27,7 @@ public class Main {
 
         Map<String,Block> blocks = parser.parse();
 
-        //parcour l'entry set
+        // Parcours la map des blocks
         for (Map.Entry<String, Block> entry : blocks.entrySet()) {
             System.out.println(entry);
         }
