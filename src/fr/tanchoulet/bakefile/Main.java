@@ -1,13 +1,14 @@
 package fr.tanchoulet.bakefile;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 
 /**
  * Classe d'exécution principale du programme
  *
  * @author Gaston Chenet
- * @version 1.0
+ * @version 1.2
  */
 public class Main {
     /**
@@ -28,17 +29,27 @@ public class Main {
         Map<String,Block> blocks = parser.parse();
 
         CircularDependencyValidator validator = new CircularDependencyValidator(blocks);
+
         if (args.length < 1) {
-            System.err.println("arg missing");
+            System.err.println("Input the block name.");
             return;
         }
 
-        boolean hasCircularDependency = validator.hasCircularDependency(args[0]);
+        Block block = blocks.get(args[0]);
+
+        if (block == null) {
+            System.err.println("Wrong block name.");
+            return;
+        }
+
+        boolean hasCircularDependency = validator.hasCircularDependency(block);
+
+        block.execute(blocks);
 
         // Parcours la map des blocks
-        for (Map.Entry<String, Block> entry : blocks.entrySet()) {
+        /*for (Map.Entry<String, Block> entry : blocks.entrySet()) {
             System.out.println(entry);
-        }
+        }*/
 
         System.out.println(hasCircularDependency);
     }

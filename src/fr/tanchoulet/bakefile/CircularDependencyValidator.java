@@ -27,17 +27,6 @@ public class CircularDependencyValidator {
     }
 
     /**
-     * Vérifie récursivement s'il n'y a aucune dépendances circulaires à partir du nom d'un bloc donné
-     * @param blockName Le nom du bloc à partir duquel il faut vérifier les dépendances circulaires
-     * @return S'il y a une dépendance circulaire
-     */
-    public boolean hasCircularDependency(String blockName) {
-        Block block = this.blocks.get(blockName);
-        if (block == null) return false;
-        return this.hasCircularDependency(block);
-    }
-
-    /**
      * Vérifie récursivement s'il n'y a aucune dépendances circulaires à partir d'un bloc donné
      * @param block Le bloc à partir duquel il faut vérifier les dépendances circulaires
      * @return S'il y a une dépendance circulaire

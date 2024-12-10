@@ -1,9 +1,10 @@
 package fr.tanchoulet.bakefile;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.sql.Array;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,7 +21,7 @@ import java.util.regex.Pattern;
  *  javac -d build foo.java
  *
  * @author Gaston Chenet
- * @version 1.1
+ * @version 1.3
  */
 public class Block {
     /**
@@ -108,10 +109,28 @@ public class Block {
             if (block == null) continue;
             block.execute(blocks);
         }
-        System.out.println("Executing block " + name + "commandes :");
-        for (String command : commands) {
-            System.out.println(command);
+
+        if (commands.length == 0) return;
+
+        ProcessBuilder pb = new ProcessBuilder(commands);
+
+        try {
+            Process process = pb.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+
+            int exitCode = process.waitFor();
+
+            System.out.println(exitCode);
+        } catch (Exception error){
+            System.out.println("Error while executing command on block " + name + " Commands : " + Arrays.toString(commands));
         }
+
     }
 
     /**
