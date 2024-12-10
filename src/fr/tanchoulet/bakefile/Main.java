@@ -42,7 +42,10 @@ public class Main {
             return;
         }
 
-        boolean hasCircularDependency = validator.hasCircularDependency(block);
+        if (validator.hasCircularDependency(block)) {
+            System.err.println("Circular dependency found.");
+            return;
+        }
 
         block.execute(blocks);
 
@@ -50,7 +53,5 @@ public class Main {
         /*for (Map.Entry<String, Block> entry : blocks.entrySet()) {
             System.out.println(entry);
         }*/
-
-        System.out.println(hasCircularDependency);
     }
 }

@@ -1,0 +1,5 @@
+main.o : hello_world.o
+    gcc -c main.c
+
+hello_world.o :
+    gcc -c hello_world.c

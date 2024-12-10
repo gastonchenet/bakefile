@@ -110,27 +110,33 @@ public class Block {
             block.execute(blocks);
         }
 
-        if (commands.length == 0) return;
+        for (String command : commands) {
+            ProcessBuilder pb = new ProcessBuilder(command.split(" +"));
 
-        ProcessBuilder pb = new ProcessBuilder(commands);
 
-        try {
-            Process process = pb.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            try {
+                Process process = pb.start();
+                System.out.println(command);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-            String line;
+                String line;
 
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
+
+                reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
+
+                int exitCode = process.waitFor();
+                if (exitCode != 0) throw new Exception("Ya un pb chef");
+            } catch (Exception error) {
+                break;
             }
-
-            int exitCode = process.waitFor();
-
-            System.out.println(exitCode);
-        } catch (Exception error){
-            System.out.println("Error while executing command on block " + name + " Commands : " + Arrays.toString(commands));
         }
-
     }
 
     /**
