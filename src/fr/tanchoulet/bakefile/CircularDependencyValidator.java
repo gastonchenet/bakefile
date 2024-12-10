@@ -1,6 +1,6 @@
 package fr.tanchoulet.bakefile;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,30 +27,42 @@ public class CircularDependencyValidator {
     }
 
     /**
-     * Vérifie récursivement s'il n'y a aucune dépendances circulaires à partir d'un bloc donnée.
+     * Vérifie récursivement s'il n'y a aucune dépendances circulaires à partir du nom d'un bloc donné
+     * @param blockName Le nom du bloc à partir duquel il faut vérifier les dépendances circulaires
+     * @return S'il y a une dépendance circulaire
+     */
+    public boolean hasCircularDependency(String blockName) {
+        Block block = this.blocks.get(blockName);
+        if (block == null) return false;
+        return this.hasCircularDependency(block);
+    }
+
+    /**
+     * Vérifie récursivement s'il n'y a aucune dépendances circulaires à partir d'un bloc donné
      * @param block Le bloc à partir duquel il faut vérifier les dépendances circulaires
      * @return S'il y a une dépendance circulaire
      */
     public boolean hasCircularDependency(Block block) {
-        return this.hasCircularDependency(block, new LinkedList<>());
+        return this.hasCircularDependency(block, new ArrayList<>());
     }
 
     /**
-     * Vérifie récursivement s'il n'y a aucune dépendances circulaires à partir d'un bloc donnée.
+     * Vérifie récursivement s'il n'y a aucune dépendances circulaires à partir d'un bloc donné
      * @param block Le bloc à partir duquel il faut vérifier les dépendances circulaires
+     * @param visited La liste des blocs visités lors des précédentes récursions
      * @return S'il y a une dépendance circulaire
      */
     private boolean hasCircularDependency(Block block, List<String> visited) {
+        visited = new ArrayList<>(visited);
         if (visited.contains(block.name)) return true;
-
         visited.add(block.name);
 
         for (String ref : block.references) {
             Block refBlock = blocks.get(ref);
             if (refBlock == null) continue;
 
-            // Vérifie récursivement si une des références de ce même bloc n'a pas déja été parcourue
-            if (this.hasCircularDependency(refBlock)) return true;
+            // Vérifie récursivement si une des références de ce même bloc n'a pas déja été parcouru
+            if (this.hasCircularDependency(refBlock, visited)) return true;
         }
 
         return false;

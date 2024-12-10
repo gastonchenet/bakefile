@@ -27,9 +27,16 @@ public class Main {
 
         Map<String,Block> blocks = parser.parse();
 
+        CircularDependencyValidator validator = new CircularDependencyValidator(blocks);
+        if (args.length < 1) return;
+
+        boolean hasCircularDependency = validator.hasCircularDependency(args[0]);
+
         // Parcours la map des blocks
         for (Map.Entry<String, Block> entry : blocks.entrySet()) {
             System.out.println(entry);
         }
+
+        System.out.println(hasCircularDependency);
     }
 }
