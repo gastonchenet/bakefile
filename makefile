@@ -8,13 +8,12 @@ PACKAGE_DIR := fr/tanchoulet/bakefile
 ROOT := $(SRC_DIR)/$(PACKAGE_DIR)
 
 
-
 # Commandes
 
 all : run                                                                                       # Exécution de la commande 'run' par défaut
 
 
-run :                                                                                       		# Exécution du fichier JAR
+run :                                                                                           # Exécution du fichier JAR
 	java -jar $(JAR)
 
 

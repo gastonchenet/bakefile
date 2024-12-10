@@ -4,14 +4,14 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
- * Classe d'execution principale du programme
+ * Classe d'exécution principale du programme
  *
  * @author Gaston Chenet
  * @version 1.0
  */
 public class Main {
     /**
-     * Méthode d'execution du programme
+     * Méthode d'exécution du programme
      * @param args Les arguments d'exécution
      */
     public static void main(String[] args) {
