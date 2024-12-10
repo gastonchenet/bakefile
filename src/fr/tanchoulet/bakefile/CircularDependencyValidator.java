@@ -9,13 +9,9 @@ import java.util.Map;
  * @see fr.tanchoulet.bakefile.Block
  *
  * @author Louis Tanchou
- * @version 1.0
+ * @version 1.1
  */
 public class CircularDependencyValidator {
-    /**
-     * La liste des noms des blocs visités
-     */
-    private final List<String> visited = new LinkedList<>();
 
     /**
      * La totalité des blocs présents dans le Bakefile
@@ -36,6 +32,15 @@ public class CircularDependencyValidator {
      * @return S'il y a une dépendance circulaire
      */
     public boolean hasCircularDependency(Block block) {
+        return this.hasCircularDependency(block, new LinkedList<>());
+    }
+
+    /**
+     * Vérifie récursivement s'il n'y a aucune dépendances circulaires à partir d'un bloc donnée.
+     * @param block Le bloc à partir duquel il faut vérifier les dépendances circulaires
+     * @return S'il y a une dépendance circulaire
+     */
+    private boolean hasCircularDependency(Block block, List<String> visited) {
         if (visited.contains(block.name)) return true;
 
         visited.add(block.name);
