@@ -1,14 +1,13 @@
 package fr.tanchoulet.bakefile;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Map;
 
 /**
  * Classe d'exécution principale du programme
  *
  * @author Gaston Chenet
- * @version 1.2
+ * @version 1.3
  */
 public class Main {
     /**
@@ -26,9 +25,8 @@ public class Main {
             return;
         }
 
+        //Dictionaire qui contient les blocks parsée
         Map<String,Block> blocks = parser.parse();
-
-
 
         if (args.length < 1) {
             System.err.println("Input the block name.");
@@ -44,11 +42,7 @@ public class Main {
 
         Executor executor = new Executor(blocks);
 
+        //Execute les commandes extraites du Bakefile
         executor.execute(block);
-
-        // Parcours la map des blocks
-        /*for (Map.Entry<String, Block> entry : blocks.entrySet()) {
-            System.out.println(entry);
-        }*/
     }
 }

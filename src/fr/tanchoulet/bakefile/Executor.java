@@ -9,7 +9,7 @@ import java.util.*;
  * @see fr.tanchoulet.bakefile.Block
  *
  * @author Louis Tanchou
- * @version 1.1
+ * @version 1.2
  */
 public class Executor {
     /**
@@ -17,6 +17,10 @@ public class Executor {
      */
     private final Map<String, Block> blocks;
 
+    /**
+     * Constructor
+     * @param blocks Tous les blocks qui ont été parsée
+     */
     Executor(Map<String, Block> blocks) {
         this.blocks = blocks;
     }
@@ -30,23 +34,25 @@ public class Executor {
     }
 
     /**
-     * Exécute un bloc
+     * Exécute a partir du bloc
      * @param block Le bloc à exécuter
+     * @param visited Set qui permet de se souvenir de se qui a été visiter pour éviter la circularité
      */
     public void execute(Block block, Set<Block> visited) {
         if (visited.contains(block)) return;
+
         visited.add(block);
 
         for (String reference : block.references) {
             Block blockReferencies = blocks.get(reference);
             if (blockReferencies == null) continue;
-            this.execute(blockReferencies);
+            this.execute(blockReferencies, visited);
         }
 
         for (String command : block.commands) {
             ProcessBuilder pb = new ProcessBuilder(command.split(" +"));
 
-
+            //Gestion des erreurs pour l'éxécution des commandes liées au blocks
             try {
                 Process process = pb.start();
                 System.out.println(command);

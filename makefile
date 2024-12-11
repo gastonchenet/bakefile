@@ -40,7 +40,7 @@ javadoc :                                                                       
 
 # Compilation par fichier
 
-Main.class : Parser.class Block.class CircularDependencyValidator.class                         # Compilation de Main (Refs: Parser, Block)
+Main.class : Parser.class Block.class Executor.class                         # Compilation de Main (Refs: Parser, Block)
 	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(ROOT)/Main.java -implicit:none
 
 
