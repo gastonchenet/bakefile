@@ -40,7 +40,7 @@ javadoc :                                                                       
 
 # Compilation par fichier
 
-Main.class : Parser.class Block.class CircularDependencyValidator.class                         # Compilation de Main (Refs: Parser, Block)
+Main.class : Parser.class Block.class Executor.class                         # Compilation de Main (Refs: Parser, Block)
 	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(ROOT)/Main.java -implicit:none
 
 
@@ -52,5 +52,5 @@ Block.class :                                                                   
 	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(ROOT)/Block.java -implicit:none
 
 
-CircularDependencyValidator.class : Block.class
-	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(ROOT)/CircularDependencyValidator.java -implicit:none
+Executor.class : Block.class
+	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(ROOT)/Executor.java -implicit:none

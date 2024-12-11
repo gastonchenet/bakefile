@@ -1,27 +1,23 @@
 package fr.tanchoulet.bakefile;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.sql.Array;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Contient toutes les données d'un 'bloc' de Bakefile
- *
+ * <p>
  * Un bloc de Bakefile suit ce modèle :
  *  <name> : [references...]
  *  <line>
  * ...
- *
+ * <p>
  * Exemple :
  *  Foo.class : Bar.class Baz.class
  *  javac -d build foo.java
  *
  * @author Gaston Chenet
- * @version 1.3
+ * @version 1.4
  */
 public class Block {
     /**
@@ -91,52 +87,13 @@ public class Block {
      * @param references Les blocs noms des blocks référencés en celui-ci
      * @param commands   La liste des commandes à exécuter après l'exécution des
      *                   références
+     * @param phony      Est-ce dans la ligne. PHONY
      */
     private Block(String name, String[] references, String[] commands, boolean phony) {
         this.name = name;
         this.references = references;
         this.commands = commands;
         this.phony = phony;
-    }
-
-    /**
-     * Exécution des références du bloc puis par la suite des commandes qu'il
-     * contient
-     */
-    public void execute(Map<String, Block> blocks) {
-        for (String reference : references) {
-            Block block = blocks.get(reference);
-            if (block == null) continue;
-            block.execute(blocks);
-        }
-
-        for (String command : commands) {
-            ProcessBuilder pb = new ProcessBuilder(command.split(" +"));
-
-
-            try {
-                Process process = pb.start();
-                System.out.println(command);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
-                }
-
-                reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-
-                while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
-                }
-
-                int exitCode = process.waitFor();
-                if (exitCode != 0) throw new Exception("Ya un pb chef");
-            } catch (Exception error) {
-                break;
-            }
-        }
     }
 
     /**
