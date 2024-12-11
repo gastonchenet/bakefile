@@ -52,5 +52,5 @@ Block.class :                                                                   
 	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(ROOT)/Block.java -implicit:none
 
 
-CircularDependencyValidator.class : Block.class
-	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(ROOT)/CircularDependencyValidator.java -implicit:none
+Executor.class : Block.class
+	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(ROOT)/Executor.java -implicit:none

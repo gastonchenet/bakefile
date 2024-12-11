@@ -28,7 +28,7 @@ public class Main {
 
         Map<String,Block> blocks = parser.parse();
 
-        CircularDependencyValidator validator = new CircularDependencyValidator(blocks);
+
 
         if (args.length < 1) {
             System.err.println("Input the block name.");
@@ -42,12 +42,9 @@ public class Main {
             return;
         }
 
-        if (validator.hasCircularDependency(block)) {
-            System.err.println("Circular dependency found.");
-            return;
-        }
+        Executor executor = new Executor(blocks);
 
-        block.execute(blocks);
+        executor.execute(block);
 
         // Parcours la map des blocks
         /*for (Map.Entry<String, Block> entry : blocks.entrySet()) {

@@ -100,46 +100,6 @@ public class Block {
     }
 
     /**
-     * Exécution des références du bloc puis par la suite des commandes qu'il
-     * contient
-     */
-    public void execute(Map<String, Block> blocks) {
-        for (String reference : references) {
-            Block block = blocks.get(reference);
-            if (block == null) continue;
-            block.execute(blocks);
-        }
-
-        for (String command : commands) {
-            ProcessBuilder pb = new ProcessBuilder(command.split(" +"));
-
-
-            try {
-                Process process = pb.start();
-                System.out.println(command);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
-                }
-
-                reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-
-                while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
-                }
-
-                int exitCode = process.waitFor();
-                if (exitCode != 0) throw new Exception("Ya un pb chef");
-            } catch (Exception error) {
-                break;
-            }
-        }
-    }
-
-    /**
      * Affichage des instances de la classe
      * Exemple : Block<Foo.class, [Bar.class, Baz.class], [@javac -d build foo.java]>
      *
