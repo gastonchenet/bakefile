@@ -17,7 +17,7 @@ Liste des tâches à réaliser pour finir la SAÉ.
 ## Programme
 - [X] Création du 'Parser' de blocs
 - [X] Vérification des dépendances circulaires
-- [ ] Exécution des commandes
+- [X] Exécution des commandes
 - [ ] Vérifier les bytesCodes déja à jour
 - [ ] Faire un bon set de tests
 
