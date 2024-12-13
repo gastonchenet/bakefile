@@ -123,7 +123,7 @@ public class Parser {
 
         while (matcher.find()) {
             String refLine = matcher.group("refs");
-            String[] refs = refLine.split(" +");
+            String[] refs = refLine.split("[\\t ]+");
             Collections.addAll(phony, refs);
         }
 
@@ -139,8 +139,8 @@ public class Parser {
      *
      * @return La liste de blocs contenus dans le 'Bakefile'
      */
-    public Map<String, Block> parse() {
-        Map<String, Block> blocks = new HashMap<>();
+    public BlockList parse() {
+        BlockList blocks = new BlockList();
         String varsReplacedContent = Parser.replaceVars(this.content);
         Matcher blockMatcher = Block.PATTERN.matcher(varsReplacedContent);
         List<String> phony = this.getPhony();
@@ -152,7 +152,7 @@ public class Parser {
             // de retirer les occurrences de '.PHONY' des blocs
             if (block.name.matches(Parser.PHONY_KEYWORD)) continue;
 
-            blocks.put(block.name, block);
+            blocks.add(block);
         }
 
         return blocks;

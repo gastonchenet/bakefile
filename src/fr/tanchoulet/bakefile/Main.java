@@ -1,7 +1,6 @@
 package fr.tanchoulet.bakefile;
 
 import java.io.FileNotFoundException;
-import java.util.Map;
 
 /**
  * Classe d'exécution principale du programme
@@ -25,24 +24,25 @@ public class Main {
             return;
         }
 
-        //Dictionaire qui contient les blocks parsée
-        Map<String,Block> blocks = parser.parse();
+        BlockList blocks = parser.parse();
 
-        if (args.length < 1) {
-            System.err.println("Input the block name.");
-            return;
+        String blockName = "all";
+
+        if (args.length > 0) {
+            blockName = args[0];
         }
 
-        Block block = blocks.get(args[0]);
+        Block block = blocks.find(blockName);
 
         if (block == null) {
-            System.err.println("Wrong block name.");
-            return;
+            block = blocks.get(0);
+        }
+
+        if (block == null) {
+            System.err.println("No targets.");
         }
 
         Executor executor = new Executor(blocks);
-
-        //Execute les commandes extraites du Bakefile
         executor.execute(block);
     }
 }

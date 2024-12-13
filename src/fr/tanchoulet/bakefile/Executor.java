@@ -1,58 +1,48 @@
 package fr.tanchoulet.bakefile;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Execute et vérifie s'il n'y a aucune dépendances circulaires à partir d'un bloc donné
  * @see fr.tanchoulet.bakefile.Block
  *
- * @author Louis Tanchou
- * @version 1.2
+ * @author Louis Tanchou, Gaston Chenet
+ * @version 1.3
  */
 public class Executor {
+    private static final Pattern COMMAND_SPLIT_PATTERN = Pattern.compile("\"(.*?)\"|\\S+");
+
     /**
      * La totalité des blocs présents dans le Bakefile
      */
-    private final Map<String, Block> blocks;
+    private final BlockList blocks;
 
-    /**
-     * Constructor
-     * @param blocks Tous les blocks qui ont été parsée
-     */
-    Executor(Map<String, Block> blocks) {
-        this.blocks = blocks;
-    }
+    private static List<String> splitCommand(String command) {
+        Matcher matcher = Executor.COMMAND_SPLIT_PATTERN.matcher(command);
+        List<String> parts = new ArrayList<>();
 
-    /**
-     * Exécute un bloc
-     * @param block Le bloc à exécuter
-     */
-    public void execute(Block block) {
-        this.execute(block, new HashSet<>());
-    }
-
-    /**
-     * Exécute a partir du bloc
-     * @param block Le bloc à exécuter
-     * @param visited Set qui permet de se souvenir de se qui a été visiter pour éviter la circularité
-     */
-    public void execute(Block block, Set<Block> visited) {
-        if (visited.contains(block)) return;
-
-        visited.add(block);
-
-        for (String reference : block.references) {
-            Block blockReferencies = blocks.get(reference);
-            if (blockReferencies == null) continue;
-            this.execute(blockReferencies, visited);
+        while (matcher.find()) {
+            if (matcher.group(1) != null) {
+                parts.add(matcher.group(1));
+            } else {
+                parts.add(matcher.group());
+            }
         }
 
-        for (String command : block.commands) {
-            ProcessBuilder pb = new ProcessBuilder(command.split(" +"));
+        return parts;
+    }
 
-            //Gestion des erreurs pour l'éxécution des commandes liées au blocks
+    private static void executeCommands(Block block) {
+        for (String command : block.commands) {
+            List<String> commandParts = Executor.splitCommand(command);
+            ProcessBuilder pb = new ProcessBuilder(commandParts);
+
+            // Gestion des erreurs pour l'exécution des commandes liées au blocks
             try {
                 Process process = pb.start();
                 System.out.println(command);
@@ -76,5 +66,50 @@ public class Executor {
                 break;
             }
         }
+    }
+
+
+    /**
+     * Constructor
+     * @param blocks Tous les blocks qui ont été parsée
+     */
+    public Executor(BlockList blocks) {
+        this.blocks = blocks;
+    }
+
+    private boolean shouldRecompile(Block block, List<String> visited) {
+        visited = new ArrayList<>(visited);
+        visited.add(block.name);
+
+        File blockFile = new File(block.name);
+        if (block.phony || !blockFile.exists()) return true;
+        long lastModified = blockFile.lastModified();
+
+        for (String referenceName : block.references) {
+            Block reference = this.blocks.find(referenceName);
+            File refFile = new File(referenceName);
+
+            if (visited.contains(referenceName)) continue;
+            if (!refFile.exists() || refFile.lastModified() > lastModified) return true;
+            if (reference != null && this.shouldRecompile(reference, visited)) return true;
+        }
+
+        return false;
+    }
+
+    private boolean shouldRecompile(Block block) {
+        return this.shouldRecompile(block, new ArrayList<>());
+    }
+
+    public void execute(Block block) {
+        if (!this.shouldRecompile(block)) return;
+
+        for (String referenceName : block.references) {
+            Block reference = this.blocks.find(referenceName);
+            if (reference == null) continue;
+            this.execute(reference);
+        }
+
+        Executor.executeCommands(block);
     }
 }

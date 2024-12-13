@@ -5,7 +5,8 @@ JAR := bakefile.jar
 MANIFEST := Manifest.mf
 PACKAGE := fr.tanchoulet.bakefile
 PACKAGE_DIR := fr/tanchoulet/bakefile
-ROOT := $(SRC_DIR)/$(PACKAGE_DIR)
+SRC_ROOT := $(SRC_DIR)/$(PACKAGE_DIR)
+BUILD_ROOT := $(BUILD_DIR)/$(PACKAGE_DIR)
 
 
 # Commandes
@@ -25,7 +26,7 @@ rebuild : clean build                                                           
 
 
 
-build : Main.class                                                                              # Compilation du projet entier
+build : $(BUILD_ROOT)/Main.class                                                                # Compilation du projet entier
 
 
 
@@ -40,17 +41,17 @@ javadoc :                                                                       
 
 # Compilation par fichier
 
-Main.class : Parser.class Block.class Executor.class                         # Compilation de Main (Refs: Parser, Block)
-	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(ROOT)/Main.java -implicit:none
+$(BUILD_ROOT)/Main.class : $(SRC_ROOT)/Parser.java $(SRC_ROOT)/Block.java $(SRC_ROOT)/BlockList.java $(SRC_ROOT)/Executor.java
+	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(SRC_ROOT)/Main.java -implicit:none
 
+$(BUILD_ROOT)/Parser.class : $(SRC_ROOT)/Block.java
+	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(SRC_ROOT)/Parser.java -implicit:none
 
-Parser.class : Block.class                                                                      # Compilation de Parser (Refs: Block)
-	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(ROOT)/Parser.java -implicit:none
+$(BUILD_ROOT)/Block.class :
+	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(SRC_ROOT)/Block.java -implicit:none
 
+$(BUILD_ROOT)/Executor.class : $(SRC_ROOT)/Block.java $(SRC_ROOT)/BlockList.java
+	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(SRC_ROOT)/Executor.java -implicit:none
 
-Block.class :                                                                                   # Compilation de Block (Refs: x)
-	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(ROOT)/Block.java -implicit:none
-
-
-Executor.class : Block.class
-	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(ROOT)/Executor.java -implicit:none
+$(BUILD_ROOT)/BlockList.class : $(SRC_ROOT)/Block.java
+	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(SRC_ROOT)/BlockList.java -implicit:none

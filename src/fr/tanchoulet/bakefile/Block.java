@@ -66,7 +66,7 @@ public class Block {
 
             // Ajout de chacune des références dans la liste des références, celles-ci
             // séparées par un ou plusieurs espaces
-            Collections.addAll(refs, line.trim().split(" +"));
+            Collections.addAll(refs, line.trim().split("[\\t ]+"));
         }
 
         while (lineMatcher.find()) {
@@ -104,7 +104,7 @@ public class Block {
      *         instance de la classe
      */
     public String toString() {
-        StringBuilder result = new StringBuilder("Block<" + name + ", [");
+        StringBuilder result = new StringBuilder("Block<" + this.name + ", [");
 
         for (String reference : references) {
             result.append(reference).append(", ");
