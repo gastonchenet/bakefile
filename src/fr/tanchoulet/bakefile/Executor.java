@@ -8,13 +8,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Execute et vérifie s'il n'y a aucune dépendances circulaires à partir d'un bloc donné
+ * Execute et vérifie s'il n'y a aucune dépendances circulaires à partir d'un
+ * bloc donné
+ * 
  * @see fr.tanchoulet.bakefile.Block
  *
  * @author Louis Tanchou, Gaston Chenet
  * @version 1.4
  */
 public class Executor {
+    /**
+     * Motif de découpe des commandes
+     */
     private static final Pattern COMMAND_SPLIT_PATTERN = Pattern.compile("\"(.*?)\"|\\S+");
 
     /**
@@ -22,6 +27,17 @@ public class Executor {
      */
     private final BlockList blocks;
 
+    /**
+     * Si le mode debug est activé
+     */
+    private final boolean debug;
+
+    /**
+     * Découpe une commande en plusieurs parties
+     * 
+     * @param command La commande à découper
+     * @return Les différentes parties de la commande
+     */
     private static List<String> splitCommand(String command) {
         Matcher matcher = Executor.COMMAND_SPLIT_PATTERN.matcher(command);
         List<String> parts = new ArrayList<>();
@@ -38,11 +54,22 @@ public class Executor {
     }
 
     /**
+     * Données de configuration pour l'exécution des commandes
+     * 
+     * @param blocks Tous les blocks qui ont été parsée
+     * @param debug  Si le mode debug est activé
+     */
+    public Executor(BlockList blocks, boolean debug) {
+        this.blocks = blocks;
+        this.debug = debug;
+    }
+
+    /**
      * Exécute les commandes d'un bloc.
      *
      * @param block Le bloc source des commandes à exécuter.
      */
-    private static void executeCommands(Block block) {
+    private void executeCommands(Block block) {
         for (String command : block.commands) {
             List<String> commandParts = Executor.splitCommand(command);
             ProcessBuilder pb = new ProcessBuilder(commandParts);
@@ -50,41 +77,41 @@ public class Executor {
             // Gestion des erreurs pour l'exécution des commandes liées au blocks
             try {
                 Process process = pb.start();
-                System.out.println(command);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
+                if (this.debug) {
+                    System.out.println(command);
+                }
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 String line;
 
                 while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
+                    if (this.debug) {
+                        System.out.println(line);
+                    }
                 }
 
                 reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 
                 while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
+                    if (this.debug) {
+                        System.out.println(line);
+                    }
                 }
 
                 int exitCode = process.waitFor();
-                if (exitCode != 0) throw new Exception("Ya un pb chef");
+                if (exitCode != 0)
+                    throw new Exception("Ya un pb chef");
             } catch (Exception error) {
                 break;
             }
         }
     }
 
-
-    /**
-     * Constructor
-     * @param blocks Tous les blocks qui ont été parsée
-     */
-    public Executor(BlockList blocks) {
-        this.blocks = blocks;
-    }
-
     /**
      * Vérifie si un bloc doit être recompilé en fonction de ses modifications
-     * @param block Le bloc source à vérifier
+     * 
+     * @param block   Le bloc source à vérifier
      * @param visited Les blocs déjà visités
      * @return true si le bloc doit être recompilé
      */
@@ -93,16 +120,24 @@ public class Executor {
         visited.add(block.name);
 
         File blockFile = new File(block.name);
-        if (block.phony || !blockFile.exists()) return true;
+
+        if (block.phony || !blockFile.exists())
+            return true;
+
         long lastModified = blockFile.lastModified();
 
         for (String referenceName : block.references) {
             Block reference = this.blocks.find(referenceName);
             File refFile = new File(referenceName);
 
-            if (visited.contains(referenceName)) continue;
-            if (!refFile.exists() || refFile.lastModified() > lastModified) return true;
-            if (reference != null && this.shouldRecompile(reference, visited)) return true;
+            if (visited.contains(referenceName))
+                continue;
+
+            if (!refFile.exists() || refFile.lastModified() > lastModified)
+                return true;
+
+            if (reference != null && this.shouldRecompile(reference, visited))
+                return true;
         }
 
         return false;
@@ -110,6 +145,7 @@ public class Executor {
 
     /**
      * Vérifie si un bloc doit être recompilé en fonction de ses modifications
+     * 
      * @param block Le bloc source à vérifier
      * @return true si le bloc doit être recompilé
      */
@@ -123,14 +159,18 @@ public class Executor {
      * @param block Le bloc source des commandes à exécuter
      */
     public void execute(Block block) {
-        if (!this.shouldRecompile(block)) return;
+        if (!this.shouldRecompile(block))
+            return;
 
         for (String referenceName : block.references) {
             Block reference = this.blocks.find(referenceName);
-            if (reference == null) continue;
+
+            if (reference == null)
+                continue;
+
             this.execute(reference);
         }
 
-        Executor.executeCommands(block);
+        this.executeCommands(block);
     }
 }

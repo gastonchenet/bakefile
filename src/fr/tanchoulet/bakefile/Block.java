@@ -8,13 +8,13 @@ import java.util.regex.Pattern;
  * Contient toutes les données d'un 'bloc' de Bakefile
  * <p>
  * Un bloc de Bakefile suit ce modèle :
- *  <name> : [references...]
- *  <line>
+ * <name> : [references...]
+ * <line>
  * ...
  * <p>
  * Exemple :
- *  Foo.class : Bar.class Baz.class
- *  javac -d build foo.java
+ * Foo.class : Bar.class Baz.class
+ * javac -d build foo.java
  *
  * @author Gaston Chenet
  * @version 1.4
@@ -98,7 +98,8 @@ public class Block {
 
     /**
      * Affichage des instances de la classe
-     * Exemple : Block<Foo.class, [Bar.class, Baz.class], [@javac -d build foo.java]>
+     * Exemple : Block<Foo.class, [Bar.class, Baz.class], [@javac -d build
+     * foo.java]>
      *
      * @return Une chaine de caractères lisible représentant les valeurs d'une
      *         instance de la classe
@@ -123,7 +124,8 @@ public class Block {
 
         result.append("]");
 
-        if (phony) result.append(", PHONY");
+        if (phony)
+            result.append(", PHONY");
 
         result.append(">");
 

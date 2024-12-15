@@ -1,6 +1,8 @@
 package fr.tanchoulet.bakefile;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Classe d'exécution principale du programme
@@ -11,6 +13,7 @@ import java.io.FileNotFoundException;
 public class Main {
     /**
      * Méthode d'exécution du programme
+     * 
      * @param args Les arguments d'exécution
      */
     public static void main(String[] args) {
@@ -24,8 +27,8 @@ public class Main {
             return;
         }
 
+        boolean debug = new HashSet<String>().contains("-d");
         BlockList blocks = parser.parse();
-
         String blockName = "all";
 
         if (args.length > 0) {
@@ -42,7 +45,7 @@ public class Main {
             System.err.println("No targets.");
         }
 
-        Executor executor = new Executor(blocks);
+        Executor executor = new Executor(blocks, debug);
         executor.execute(block);
     }
 }

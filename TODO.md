@@ -3,6 +3,7 @@
 Liste des tâches à réaliser pour finir la SAÉ.
 
 ## Rapport
+
 - [ ] Introduction (+README)
 - [ ] Description des fonctionnalités
 - [ ] Description de l'algorithme de dépendances circulaires
@@ -15,11 +16,13 @@ Liste des tâches à réaliser pour finir la SAÉ.
 ---
 
 ## Programme
-- [X] Création du 'Parser' de blocs
-- [X] Vérification des dépendances circulaires
-- [X] Exécution des commandes
-- [X] Vérifier les bytesCodes déja à jour
-- [X] Faire un bon set de tests
+
+- [x] Création du 'Parser' de blocs
+- [x] Vérification des dépendances circulaires
+- [x] Exécution des commandes
+- [x] Vérifier les bytesCodes déja à jour
+- [x] Faire un bon set de tests
 
 ## Makefile
-- [X] Makefile à jour
+
+- [x] Makefile à jour
