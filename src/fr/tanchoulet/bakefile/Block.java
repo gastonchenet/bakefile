@@ -52,7 +52,7 @@ public class Block {
      * @return Les données d'un bloc sous une forme structurée
      */
     public static Block parse(String rawData, List<String> phonyElements) {
-        // Le nom se trouve obligatoirement avant les ':'
+        // Le nom se trouve obligatoirement avant les ' :'
         String name = rawData.split(":")[0].trim();
         List<String> refs = new ArrayList<>();
         List<String> lines = new ArrayList<>();
@@ -83,7 +83,7 @@ public class Block {
     /**
      * Les données de construction d'un bloc
      * 
-     * @param name       Le nom du bloc (sert de références pour les autres blocs)
+     * @param name       Le nom du bloc (sert de références pour les autres blocs).
      * @param references Les blocs noms des blocks référencés en celui-ci
      * @param commands   La liste des commandes à exécuter après l'exécution des
      *                   références

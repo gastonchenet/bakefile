@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * @see fr.tanchoulet.bakefile.Block
  *
  * @author Louis Tanchou, Gaston Chenet
- * @version 1.3
+ * @version 1.4
  */
 public class Executor {
     private static final Pattern COMMAND_SPLIT_PATTERN = Pattern.compile("\"(.*?)\"|\\S+");
@@ -37,6 +37,11 @@ public class Executor {
         return parts;
     }
 
+    /**
+     * Exécute les commandes d'un bloc.
+     *
+     * @param block Le bloc source des commandes à exécuter.
+     */
     private static void executeCommands(Block block) {
         for (String command : block.commands) {
             List<String> commandParts = Executor.splitCommand(command);
@@ -77,6 +82,12 @@ public class Executor {
         this.blocks = blocks;
     }
 
+    /**
+     * Vérifie si un bloc doit être recompilé en fonction de ses modifications
+     * @param block Le bloc source à vérifier
+     * @param visited Les blocs déjà visités
+     * @return true si le bloc doit être recompilé
+     */
     private boolean shouldRecompile(Block block, List<String> visited) {
         visited = new ArrayList<>(visited);
         visited.add(block.name);
@@ -97,10 +108,20 @@ public class Executor {
         return false;
     }
 
+    /**
+     * Vérifie si un bloc doit être recompilé en fonction de ses modifications
+     * @param block Le bloc source à vérifier
+     * @return true si le bloc doit être recompilé
+     */
     private boolean shouldRecompile(Block block) {
         return this.shouldRecompile(block, new ArrayList<>());
     }
 
+    /**
+     * Exécute les commandes d'un bloc récursivement
+     *
+     * @param block Le bloc source des commandes à exécuter
+     */
     public void execute(Block block) {
         if (!this.shouldRecompile(block)) return;
 
