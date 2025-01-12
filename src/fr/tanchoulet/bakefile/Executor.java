@@ -99,9 +99,8 @@ public class Executor {
                     }
                 }
 
-                int exitCode = process.waitFor();
-                if (exitCode != 0)
-                    throw new Exception("Ya un pb chef");
+                if (process.waitFor() != 0)
+                    throw new Exception("Une erreur est survenue lors de l'exécution de la commande");
             } catch (Exception error) {
                 break;
             }
