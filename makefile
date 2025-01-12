@@ -9,7 +9,7 @@ SRC_ROOT := $(SRC_DIR)/$(PACKAGE_DIR)
 BUILD_ROOT := $(BUILD_DIR)/$(PACKAGE_DIR)
 
 
-.PHONY all run jar rebuild build javadoc clean
+.PHONY : all run jar rebuild build javadoc clean
 
 
 # Commandes

@@ -1,8 +1,5 @@
 .idea/
 bakefile*
-!bakefile/
-!*/**/bakefile
 build/
 doc/
-*.jar
-*.o
+!*/tests/**/bakefile
