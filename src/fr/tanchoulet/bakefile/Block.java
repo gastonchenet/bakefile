@@ -96,6 +96,10 @@ public class Block {
         this.phony = phony;
     }
 
+    public boolean isEmpty() {
+        return references.length == 0 && commands.length == 0;
+    }
+
     /**
      * Affichage des instances de la classe
      * Exemple : Block<Foo.class, [Bar.class, Baz.class], [@javac -d build

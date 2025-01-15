@@ -76,11 +76,11 @@ public class Executor {
 
             // Gestion des erreurs pour l'exécution des commandes liées au blocks
             try {
-                Process process = pb.start();
-
                 if (this.debug) {
                     System.out.println(command);
                 }
+
+                Process process = pb.start();
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 String line;
@@ -102,6 +102,7 @@ public class Executor {
                 if (process.waitFor() != 0)
                     throw new Exception("Une erreur est survenue lors de l'exécution de la commande");
             } catch (Exception error) {
+                System.err.println("Error: " + error.getMessage());
                 break;
             }
         }

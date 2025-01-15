@@ -18,7 +18,7 @@ all : run                                                                       
 
 
 run :                                                                                           # Exécution du fichier JAR
-	java -jar $(JAR) Main.class
+	java -jar $(JAR) -d
 
 
 jar : build                                                                                     # Création de l'archive JAR

@@ -1,13 +1,15 @@
 package fr.tanchoulet.bakefile;
 
 import java.io.FileNotFoundException;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Classe d'exécution principale du programme
  *
  * @author Gaston Chenet
- * @version 1.3
+ * @version 1.4
  */
 public class Main {
     /**
@@ -26,23 +28,45 @@ public class Main {
             return;
         }
 
-        boolean debug = new HashSet<String>().contains("-d");
         BlockList blocks = parser.parse();
-        String blockName = "all";
+        String blockName = "";
 
+        // Si un argument est passé, il est considéré comme le nom du bloc à exécuter
         if (args.length > 0) {
             blockName = args[0];
         }
 
         Block block = blocks.find(blockName);
 
+        // Si le bloc n'existe pas, on prend le premier bloc de la liste
         if (block == null) {
             block = blocks.get(0);
         }
 
+        // Si l'argument '-d' est présent mais que le bloc n'existe pas, on affiche un
+        // message d'erreur
+        if (blockName != "-d" && block == null) {
+            System.err.println("Target not found: " + blockName);
+            return;
+        }
+
+        // Si le bloc est vide, on affiche un message d'erreur
         if (block == null) {
             System.err.println("No targets.");
+            return;
         }
+
+        // Si le bloc est vide, on affiche un message d'erreur
+        if (block.isEmpty()) {
+            System.err.println("Nothing to be done for '" + block.name + "'");
+            return;
+        }
+
+        Set<String> argsSet = new HashSet<String>();
+        Collections.addAll(argsSet, args);
+
+        // Active le mode debug si l'argument '-d' est présent
+        boolean debug = argsSet.contains("-d");
 
         Executor executor = new Executor(blocks, debug);
         executor.execute(block);

@@ -2,4 +2,4 @@
 bakefile*
 build/
 doc/
-!*/tests/**/bakefile
+!tests/**/bakefile
