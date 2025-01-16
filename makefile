@@ -7,7 +7,7 @@ PACKAGE := fr.tanchoulet.bakefile
 PACKAGE_DIR := fr/tanchoulet/bakefile
 SRC_ROOT := $(SRC_DIR)/$(PACKAGE_DIR)
 BUILD_ROOT := $(BUILD_DIR)/$(PACKAGE_DIR)
-
+ARGS := -d $(BUILD_DIR) -cp $(BUILD_DIR) -implicit:none
 
 .PHONY : all run jar rebuild build javadoc clean
 
@@ -44,25 +44,17 @@ javadoc :                                                                       
 
 # Compilation par fichier
 
-$(BUILD_ROOT)/Main.class : $(SRC_ROOT)/Parser.java $(SRC_ROOT)/Block.java $(SRC_ROOT)/BlockList.java $(SRC_ROOT)/Executor.java
-	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(SRC_ROOT)/Main.java -implicit:none
+$(BUILD_ROOT)/Main.class : $(SRC_ROOT)/Main.java $(BUILD_ROOT)/Parser.class $(BUILD_ROOT)/Block.class $(BUILD_ROOT)/BlockList.class $(BUILD_ROOT)/Executor.class
+	javac $(ARGS) $(SRC_ROOT)/Main.java
 
-$(BUILD_ROOT)/Parser.class : $(SRC_ROOT)/Block.java $(SRC_ROOT)/BlockList.java
-	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(SRC_ROOT)/Parser.java -implicit:none
+$(BUILD_ROOT)/Parser.class : $(SRC_ROOT)/Parser.java $(BUILD_ROOT)/Block.class $(BUILD_ROOT)/BlockList.class
+	javac $(ARGS) $(SRC_ROOT)/Parser.java
 
-$(BUILD_ROOT)/Block.class :
-	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(SRC_ROOT)/Block.java -implicit:none
+$(BUILD_ROOT)/Block.class : $(SRC_ROOT)/Block.java
+	javac $(ARGS) $(SRC_ROOT)/Block.java
 
-$(BUILD_ROOT)/Executor.class : $(SRC_ROOT)/Block.java $(SRC_ROOT)/BlockList.java
-	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(SRC_ROOT)/Executor.java -implicit:none
+$(BUILD_ROOT)/Executor.class : $(SRC_ROOT)/Executor.java $(BUILD_ROOT)/Block.class $(BUILD_ROOT)/BlockList.class
+	javac $(ARGS) $(SRC_ROOT)/Executor.java
 
-$(BUILD_ROOT)/BlockList.class : $(SRC_ROOT)/Block.java
-	javac -d $(BUILD_DIR) -cp $(BUILD_DIR) $(SRC_ROOT)/BlockList.java -implicit:none
-
-$(SRC_ROOT)/Parser.java : $(BUILD_ROOT)/Parser.class
-
-$(SRC_ROOT)/Block.java : $(BUILD_ROOT)/Block.class
-
-$(SRC_ROOT)/BlockList.java : $(BUILD_ROOT)/BlockList.class
-
-$(SRC_ROOT)/Executor.java : $(BUILD_ROOT)/Executor.class
+$(BUILD_ROOT)/BlockList.class : $(SRC_ROOT)/BlockList.java $(BUILD_ROOT)/Block.class
+	javac $(ARGS) $(BUILD_DIR) $(SRC_ROOT)/BlockList.java
