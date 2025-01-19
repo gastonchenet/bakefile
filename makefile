@@ -57,4 +57,4 @@ $(BUILD_ROOT)/Executor.class : $(SRC_ROOT)/Executor.java $(BUILD_ROOT)/Block.cla
 	javac $(ARGS) $(SRC_ROOT)/Executor.java
 
 $(BUILD_ROOT)/BlockList.class : $(SRC_ROOT)/BlockList.java $(BUILD_ROOT)/Block.class
-	javac $(ARGS) $(BUILD_DIR) $(SRC_ROOT)/BlockList.java
+	javac $(ARGS) $(SRC_ROOT)/BlockList.java
