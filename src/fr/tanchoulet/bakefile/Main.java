@@ -65,8 +65,8 @@ public class Main {
         Set<String> argsSet = new HashSet<String>();
         Collections.addAll(argsSet, args);
 
-        // Active le mode debug si l'argument '-d' est présent
-        boolean debug = argsSet.contains("-d");
+        // Active le mode debug si l'argument '-d' ou '--debug' est présent
+        boolean debug = argsSet.contains("-d") || argsSet.contains("--debug");
 
         Executor executor = new Executor(blocks, debug);
         executor.execute(block);

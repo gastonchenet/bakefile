@@ -76,27 +76,20 @@ public class Executor {
 
             // Gestion des erreurs pour l'exécution des commandes liées au blocks
             try {
-                if (this.debug) {
-                    System.out.println(command);
-                }
-
+                System.out.println(command);
                 Process process = pb.start();
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 String line;
 
                 while ((line = reader.readLine()) != null) {
-                    if (this.debug) {
-                        System.out.println(line);
-                    }
+                    System.out.println(line);
                 }
 
                 reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 
                 while ((line = reader.readLine()) != null) {
-                    if (this.debug) {
-                        System.out.println(line);
-                    }
+                    System.out.println(line);
                 }
 
                 if (process.waitFor() != 0)
@@ -113,16 +106,30 @@ public class Executor {
      * 
      * @param block   Le bloc source à vérifier
      * @param visited Les blocs déjà visités
+     * @param depth   La profondeur de la récursion
      * @return true si le bloc doit être recompilé
      */
-    private boolean shouldRecompile(Block block, List<String> visited) {
+    private boolean shouldRecompile(Block block, List<String> visited, int depth) {
         visited = new ArrayList<>(visited);
         visited.add(block.name);
 
         File blockFile = new File(block.name);
 
-        if (block.phony || !blockFile.exists())
+        if (!blockFile.exists()) {
+            if (this.debug) {
+                System.out.println(" ".repeat(depth) + "The file '" + block.name + "' does not exist, recompiling.");
+            }
+
             return true;
+        }
+
+        if (block.phony) {
+            if (this.debug) {
+                System.out.println(" ".repeat(depth) + "The file '" + block.name + "' is .PHONY, recompiling.");
+            }
+
+            return true;
+        }
 
         long lastModified = blockFile.lastModified();
 
@@ -133,11 +140,35 @@ public class Executor {
             if (visited.contains(referenceName))
                 continue;
 
-            if (!refFile.exists() || refFile.lastModified() > lastModified)
-                return true;
+            if (!refFile.exists()) {
+                if (this.debug) {
+                    System.out.println(
+                            " ".repeat(depth) + "The file '" + referenceName + "' does not exist, recompiling.");
+                }
 
-            if (reference != null && this.shouldRecompile(reference, visited))
                 return true;
+            }
+
+            if (refFile.lastModified() > lastModified) {
+                if (this.debug) {
+                    System.out
+                            .println(" ".repeat(depth) + "The file '" + referenceName + "' is newer than '" + block.name
+                                    + "', recompiling.");
+                }
+
+                return true;
+            } else if (this.debug) {
+                System.out.println("The file '" + referenceName + "' is older than '" + block.name + "'.");
+            }
+
+            if (reference != null && this.shouldRecompile(reference, visited, depth + 1)) {
+                if (this.debug) {
+                    System.out.println(" ".repeat(depth) + "The file '" + referenceName
+                            + "' needs to be recompile because one of its dependencies has been modified, recompiling.");
+                }
+
+                return true;
+            }
         }
 
         return false;
@@ -150,7 +181,7 @@ public class Executor {
      * @return true si le bloc doit être recompilé
      */
     private boolean shouldRecompile(Block block) {
-        return this.shouldRecompile(block, new ArrayList<>());
+        return this.shouldRecompile(block, new ArrayList<>(), 0);
     }
 
     /**
