@@ -179,6 +179,7 @@ public class Executor {
      * Vérifie si un bloc doit être recompilé en fonction de ses modifications
      * 
      * @param block Le bloc source à vérifier
+     * @param depth La profondeur de la récursion
      * @return true si le bloc doit être recompilé
      */
     private boolean shouldRecompile(Block block, int depth) {
