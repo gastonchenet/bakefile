@@ -52,7 +52,7 @@ public class Block {
      * @return Les données d'un bloc sous une forme structurée
      */
     public static Block parse(String rawData, List<String> phonyElements) {
-        // Le nom se trouve obligatoirement avant les ' :'
+        // Le nom se trouve obligatoirement avant les ':'
         String name = rawData.split(":")[0].trim();
         List<String> refs = new ArrayList<>();
         List<String> lines = new ArrayList<>();

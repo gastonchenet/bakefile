@@ -68,6 +68,7 @@ public class Main {
         // Active le mode debug si l'argument '-d' ou '--debug' est présent
         boolean debug = argsSet.contains("-d") || argsSet.contains("--debug");
 
+        // Exécute les commandes du bloc ainsi que les commandes des dépendances
         Executor executor = new Executor(blocks, debug);
         executor.execute(block);
     }
