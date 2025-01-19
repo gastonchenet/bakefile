@@ -158,7 +158,8 @@ public class Executor {
 
                 return true;
             } else if (this.debug) {
-                System.out.println("The file '" + referenceName + "' is older than '" + block.name + "'.");
+                System.out.println(
+                        " ".repeat(depth) + "The file '" + referenceName + "' is older than '" + block.name + "'.");
             }
 
             if (reference != null && this.shouldRecompile(reference, visited, depth + 1)) {
@@ -180,17 +181,18 @@ public class Executor {
      * @param block Le bloc source à vérifier
      * @return true si le bloc doit être recompilé
      */
-    private boolean shouldRecompile(Block block) {
-        return this.shouldRecompile(block, new ArrayList<>(), 0);
+    private boolean shouldRecompile(Block block, int depth) {
+        return this.shouldRecompile(block, new ArrayList<>(), depth);
     }
 
     /**
      * Exécute les commandes d'un bloc récursivement
      *
      * @param block Le bloc source des commandes à exécuter
+     * @param depth La profondeur de la récursion
      */
-    public void execute(Block block) {
-        if (!this.shouldRecompile(block))
+    public void execute(Block block, int depth) {
+        if (!this.shouldRecompile(block, depth))
             return;
 
         for (String referenceName : block.references) {
@@ -199,9 +201,18 @@ public class Executor {
             if (reference == null)
                 continue;
 
-            this.execute(reference);
+            this.execute(reference, depth + 1);
         }
 
         this.executeCommands(block);
+    }
+
+    /**
+     * Exécute les commandes d'un bloc récursivement
+     *
+     * @param block Le bloc source des commandes à exécuter
+     */
+    public void execute(Block block) {
+        this.execute(block, 0);
     }
 }
